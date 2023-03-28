@@ -64,21 +64,28 @@ void gpiounex(int pin){
     close(fd);
 }
 
-static int gpiodir(int pin, int di){
+#define IN 0
+static int
+gpiodir(int pin, int dir)
+{
+	static const char s_directions_str[]  = "in\0out";
 
-    static const char s_directions_str[]  = "in\0out";
-    int fd;
-	char path[50];
-	sprintf (path, "/sys/class/gpio/gpio%d/direction", pin);
+#define DIRECTION_MAX 35
+	char path[DIRECTION_MAX];
+	int fd;
+
+	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d/direction", pin);
 	fd = open(path, O_WRONLY);
-	if(fd == -1){
-
-		fprintf(stderr,"faild to open directory dir.");
+	if (-1 == fd) {
+		fprintf(stderr, "Failed to open gpio direction for writing!\n");
+		return(-1);
 	}
 
-    write(fd, &s_directions_str[0 == di ? 0 :3], 0 == di ? 2: 3);
-
+	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3)) {
+		fprintf(stderr, "Failed to set direction!\n");
+		return(-1);
+	}
 
 	close(fd);
-    return 0;
+	return(0);
 }

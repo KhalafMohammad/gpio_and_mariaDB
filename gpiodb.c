@@ -22,8 +22,8 @@ typedef struct stoplight
 
 int main(int ac, char **ap) {
 
-	struct stoplight stoplight1[]= {{21, 20, 16},
-                                    {22, 27, 17}};
+	// struct stoplight stoplight1[]= {{21, 20, 16},
+    //                                 {22, 27, 17}};
 
 #ifdef test
 
